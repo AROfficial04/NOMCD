@@ -55,6 +55,10 @@ def get_columns():
 @app.route("/process_data", methods=["POST"])
 def process_data():
     try:
+        # Ensure the uploads directory exists
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+
         # Retrieve uploaded files and selected column names
         file1 = request.files['file1']
         file2 = request.files['file2']
