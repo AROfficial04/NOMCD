@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nomc Website</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      /* Professional Font */
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+      background-color: #fff;
+      padding: 1.5rem;
+      /* border-radius: 12px; */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      /* margin: 1rem auto; */
+      max-width: 100%;
+    }
+
+    .logo-name h2 {
+      color: #0033b3;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .logo-name h2 span {
+      color: #006aff;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      max-width: 95%;
+      margin: 1rem auto;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+    }
+
+    /* .right-section {
+          flex: 0 0 15%;
+        } */
+    .center-section {
+      flex: 0 0 75%;
+    }
+
+    .left-section {
+      flex: 0 0 20%;
+    }
+
+    .left-section {
+      padding-right: 1rem;
+    }
+
+    .file-input,
+    .column-select {
+      padding: 1rem;
+      background-color: #f9f9fb;
+      border-radius: 12px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+      margin-bottom: 1.5rem;
+    }
+
+    .file-input h3,
+    .column-select h3 {
+      font-size: 1.25rem;
+      color: #0033b3;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      display: block;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="file"],
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    select:focus,
+    input:focus {
+      outline: none;
+      border-color: #006aff;
+      box-shadow: 0 0 0 2px rgba(0, 106, 255, 0.2);
+    }
+
+    .process-section {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    #processButton {
+      padding: 0.75rem 2rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      background-color: #006aff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #processButton:hover {
+      background-color: #0051cc;
+      transform: scale(1.05);
+    }
+
+    .right-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #f9f9fb;
+      border-radius: 12px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+    }
+
+    .center-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #f9f9fb;
+      border-radius: 12px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+    }
+
+    #summarySection {
+      display: none;
+      padding: 1rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    #summarySection h3 {
+      font-size: 1.5rem;
+      color: #0033b3;
+      margin-bottom: 1rem;
+    }
+
+    #summaryCards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      padding: 1rem 0;
+    }
+
+    #loader {
+      display: none;
+      margin-top: 2rem;
+    }
+
+    #loader img {
+      height: 70px;
+      /* animation: spin 1.5s linear infinite; */
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .left-section,
+      .right-section .center-section {
+        width: 100%;
+      }
+    }
+
+    #links a {
+      font-size: 20px;
+      font-weight: bold;
+      list-style: none;
+      text-decoration: none;
+      color: red;
+    }
+
+    #links a:hover {
+      font-size: 22px;
+      font-weight: bold;
+      list-style: none;
+      text-decoration: none;
+      color: rgb(153, 0, 0);
+    }
+
+    .reload-button {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .reload-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .reload-icon:hover {
+      animation: spin 0.6s linear;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+   
+  </style>
+
+  <body>
+    <header
+      style="
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+          rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+          rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+        background-color: rgb(255, 255, 255);
+        margin: none;
+        padding: 1rem 1rem 1rem 1rem;
+        align-items: center;
+      "
+    >
+      <img
+        height="50"
+        src="{{ url_for('static', filename='logonew.png') }}"
+        alt="Left Logo"
+      />
+      <h2
+        style="
+          color: rgb(0, 51, 179);
+          font-size: 1.8rem;
+          white-space: nowrap;
+          margin: 0;
+        "
+      >
+        Network Operating and Monitoring Centre
+        <span style="color: rgb(0, 106, 255)">(NOMC)</span>
+      </h2>
+      <img
+        height="50"
+        src="{{ url_for('static', filename='cspdcl.jpg') }}"
+        alt="Right Logo"
+      />
+    </header>
+    <div class="container">
+      <!-- Left Section -->
+      <div style="justify-content: left" class="left-section">
+        <div class="file-input">
+          <h3>Upload Files</h3>
+          <label>File 1 (WFM):</label>
+          <input type="file" id="file1" onchange="fetchColumns('file1')" />
+          <label>File 2 (HES):</label>
+          <input type="file" id="file2" onchange="fetchColumns('file2')" />
+        </div>
+        <div class="column-select">
+          <h3>Select Columns</h3>
+          <label>WFM Column:</label>
+          <select id="wfmColumn">
+            <option value="" disabled selected>Select column</option>
+          </select>
+          <label>HES Column:</label>
+          <select id="hesColumn">
+            <option value="" disabled selected>Select column</option>
+          </select>
+          <label>Non-Comm Column:</label>
+          <select id="nonCommColumn">
+            <option value="" disabled selected>Select column</option>
+          </select>
+        </div>
+        <div
+          style="
+            align-items: center;
+            justify-content: space-evenly;
+            display: flex;
+            width: 100%;
+          "
+          class="process-section"
+        >
+          <button id="processButton">Process Data</button>
+          <button class="reload-button" onclick="location.reload()">
+            <img
+              class="reload-icon"
+              height="40"
+              src="{{ url_for('static', filename='relo.png') }}"
+              alt="Reload"
+            />
+          </button>
+        </div>
+      </div>
+      <!-- Right Section -->
+      <div
+        style="justify-content: center; text-align: center"
+        class="center-section"
+      >
+        <div>
+          <h3>Download Links!</h3>
+          <ul style="width: 50vw">
+            <div
+              style="display: flex; justify-content: space-evenly"
+              id="links"
+            >
+              <!-- Summary Cards Inserted Dynamically  -->
+            </div>
+          </ul>
+        </div>
+        <div id="summarySection">
+          <h3>Summary</h3>
+          <div id="summaryCards">
+            <!-- Summary Cards Inserted Dynamically -->
+          </div>
+        </div>
+
+        <div id="loader">
+          <img
+            src="{{ url_for('static', filename='1495.png') }}"
+            alt="Loading"
+          />
+        </div>
+      </div>
+      <!-- <div  class="right-section">
+             -->
+      <div id="loader">
+        <img src="{{ url_for('static', filename='1495.png') }}" alt="Loading" />
+      </div>
+      <!-- </div> -->
+    </div>
+
+    <script>
+      function fetchColumns(fileInputId) {
+        // Show loader when processing
+        document.getElementById("loader").style.display = "block";
+
+        const fileInput = document.getElementById(fileInputId);
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        $.ajax({
+          url: "/get_columns",
+          type: "POST",
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            // Hide loader once columns are fetched
+            document.getElementById("loader").style.display = "none";
+
+            if (fileInputId === "file1") {
+              populateDropdown("#wfmColumn", response.columns);
+            } else if (fileInputId === "file2") {
+              populateDropdown("#nonCommColumn", response.columns);
+              populateDropdown("#hesColumn", response.columns);
+            }
+          },
+          error: function (xhr) {
+            // Hide loader if error occurs
+            document.getElementById("loader").style.display = "none";
+            alert("Error: " + xhr.responseJSON.error);
+          },
+        });
+      }
+
+      function populateDropdown(dropdownId, columns) {
+        const dropdown = $(dropdownId);
+        dropdown.empty();
+        dropdown.append(
+          '<option value="" disabled selected>Select column</option>'
+        );
+        columns.forEach((column) => {
+          dropdown.append(`<option value="${column}">${column}</option>`);
+        });
+      }
+
+      $("#processButton").click(function () {
+        // Show loader during data processing
+        document.getElementById("loader").style.display = "block";
+
+        let formData = new FormData();
+        formData.append("file1", $("#file1")[0].files[0]);
+        formData.append("file2", $("#file2")[0].files[0]);
+        formData.append("wfmColumn", $("#wfmColumn").val());
+        formData.append("hesColumn", $("#hesColumn").val());
+        formData.append("nonCommColumn", $("#nonCommColumn").val());
+
+        $.ajax({
+          url: "/process_data",
+          type: "POST",
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            // Hide loader once data is processed
+            document.getElementById("loader").style.display = "none";
+
+            // Display the processed data preview
+            // showPreview(response);
+
+            // Display download links after previewing
+
+            $("#links").html(` 
+                        
+                      <a href="${response.nonCommFile}" download style="
+    display: inline-flex;
+    align-items: center;
+    margin: 10px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+" onmouseover="this.style.backgroundColor='#0056b3'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.3)';" 
+onmouseout="this.style.backgroundColor='#007bff'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+    Non-Comm Data
+    <img height="20" src="assets/downl.png" alt="" style="margin-left: 10px;">
+</a>
+
+<a href="${response.neverCommFile}" download style="
+    display: inline-flex;
+    align-items: center;
+    margin: 10px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+" onmouseover="this.style.backgroundColor='#0056b3'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.3)';" 
+onmouseout="this.style.backgroundColor='#007bff'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+    Never-Comm Data
+    <img height="20" src="assets/downl.png" alt="" style="margin-left: 10px;">
+</a>
+
+<a href="${response.unmappedFile}" download style="
+    display: inline-flex;
+    align-items: center;
+    margin: 10px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+" onmouseover="this.style.backgroundColor='#0056b3'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.3)';" 
+onmouseout="this.style.backgroundColor='#007bff'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+    Unmapped Data
+    <img height="20" src="assets/downl.png" alt="" style="margin-left: 10px;">
+</a>
+
+
+                    `);
+          },
+          error: function (xhr) {
+            // Hide loader on error
+            document.getElementById("loader").style.display = "none";
+            alert("Error: " + xhr.responseJSON.error);
+          },
+        });
+      });
+
+      // function showPreview(response) {
+      //     // Show the preview section
+      //     document.getElementById('preview').style.display = 'block';
+
+      //     // Assuming the data is in a tabular format (e.g., JSON array of rows)
+      //     const data = response.previewData;
+      //     const table = $("#dataTable");
+
+      //     // Clear previous data in the table
+      //     table.empty();
+
+      //     // Create table headers
+      //     if (data && data.length > 0) {
+      //         const headers = Object.keys(data[0]);
+      //         const headerRow = $("<tr>");
+      //         headers.forEach(header => {
+      //             headerRow.append(`<th>${header}</th>`);
+      //         });
+      //         table.append(headerRow);
+
+      //         // Add table rows
+      //         data.forEach(row => {
+      //             const rowElement = $("<tr>");
+      //             headers.forEach(header => {
+      //                 rowElement.append(`<td>${row[header]}</td>`);
+      //             });
+      //             table.append(rowElement);
+      //         });
+
+      //         // Show the download button after preview
+      //         $("#downloadButton").show();
+      //     } else {
+      //         table.append("<tr><td colspan='100%'>No data to display.</td></tr>");
+      //     }
+      // }
+      function updateSummary(summary) {
+        const summarySection = document.getElementById("summarySection");
+        const summaryCards = document.getElementById("summaryCards");
+
+        // Clear previous summary content
+        summaryCards.innerHTML = "";
+
+        // Main summary categories
+        const mainCategories = [
+          { title: "WFM Total Entries", count: summary["WFM Total Entries"] },
+          { title: "HES Total Entries", count: summary["HES Total Entries"] },
+          { title: "Non-Comm Count", count: summary["Non-Comm Count"] },
+          { title: "Never-Comm Count", count: summary["Never-Comm Count"] },
+          { title: "Unmapped Count", count: summary["Unmapped Count"] },
+          // { title: "Matched Entries", count: summary["Matched Entries"] },
+        ];
+        console.log(mainCategories);
+
+        mainCategories.forEach((category) => {
+          const card = document.createElement("div");
+          card.style.cssText = `
+            flex: 1 1 calc(200px - 10px);
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        `;
+          card.innerHTML = `
+            <h4 style="margin-bottom: 10px; color: #333;">${category.title}</h4>
+            <p style="font-size: 20px; font-weight: bold; color: #007bff;">${category.count}</p>
+        `;
+          summaryCards.appendChild(card);
+        });
+
+        // Add detailed analysis
+        const detailedAnalysis = summary["Detailed Analysis"];
+        Object.keys(detailedAnalysis).forEach((file) => {
+          const fileAnalysis = detailedAnalysis[file];
+
+          Object.keys(fileAnalysis).forEach((column) => {
+            const columnData = fileAnalysis[column];
+
+            const card = document.createElement("div");
+            card.style.cssText = `
+                flex: 1 1 calc(250px - 20px);
+                background: #f9f9f9;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+            `;
+            card.innerHTML = `
+                <h4 style="margin-bottom: 10px; color: #333;">${file} - ${column}</h4>
+                <p style="margin-bottom: 10px; color: #555;">Unique Values: ${
+                  columnData.unique_count
+                }</p>
+                <p style="color: #555;">Frequencies:</p>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    ${Object.entries(columnData.frequencies)
+                      .map(
+                        ([value, count]) =>
+                          `<li style="margin-bottom: 5px; color: #666;">
+                                    <strong>${value}:</strong> ${count}
+                                </li>`
+                      )
+                      .join("")}
+                </ul>
+            `;
+            summaryCards.appendChild(card);
+          });
+        });
+
+        // Show the updated summary section
+        summarySection.style.display = "block";
+      }
+
+      $("#processButton").click(function () {
+        // Show loader during data processing
+        document.getElementById("loader").style.display = "block";
+
+        let formData = new FormData();
+        formData.append("file1", $("#file1")[0].files[0]);
+        formData.append("file2", $("#file2")[0].files[0]);
+        formData.append("wfmColumn", $("#wfmColumn").val());
+        formData.append("hesColumn", $("#hesColumn").val());
+        formData.append("nonCommColumn", $("#nonCommColumn").val());
+
+        $.ajax({
+          url: "/process_data",
+          type: "POST",
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            // Hide loader once data is processed
+            document.getElementById("loader").style.display = "none";
+
+            // Display the processed data preview (optional)
+            // showPreview(response.previewData);
+
+            // Update the summary section with response data
+            updateSummary(response.summary);
+          },
+          error: function (xhr) {
+            // Hide loader and show an error message
+            document.getElementById("loader").style.display = "none";
+            alert(
+              "An error occurred while processing the files. Please try again."
+            );
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
