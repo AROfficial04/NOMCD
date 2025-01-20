@@ -18,10 +18,6 @@ client = MongoClient("mongodb+srv://mass:ayamass@nomc.r8hka.mongodb.net/")
 db = client['nomc']
 collection = db['processed_data']
 
-# Delete all documents in the collection
-result = collection.delete_many({})
-print(f"Deleted {result.deleted_count} documents.")
-
 # Helper function to check file extensions
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
