@@ -25,17 +25,34 @@ fs = gridfs.GridFS(db)
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-
 # Helper function to check allowed file extensions
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 # Route to render the index.html file
 @app.route("/")
 def index():
     return render_template("index.html")
 
+# Route to handle file uploads and get columns
+@app.route("/get_columns", methods=["POST"])
+def get_columns():
+    try:
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+
+            # Read the Excel file and extract columns
+            df = pd.read_excel(filepath)
+            columns = df.columns.tolist()
+
+            return jsonify({"columns": columns})
+        else:
+            return jsonify({"error": "Invalid file format"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Route to handle file uploads and store in GridFS
 @app.route("/upload", methods=["POST"])
@@ -53,7 +70,6 @@ def upload_file():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 # Route to download files from GridFS
 @app.route('/download/<file_id>', methods=['GET'])
 def download_gridfs_file(file_id):
@@ -67,7 +83,6 @@ def download_gridfs_file(file_id):
         )
     except Exception as e:
         return jsonify({"error": f"File not found: {str(e)}"}), 404
-
 
 # Route to process the uploaded data
 @app.route("/process_data", methods=["POST"])
@@ -152,7 +167,6 @@ def process_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 # Route to download processed files
 @app.route('/download/<filename>')
 def download_file(filename):
@@ -160,7 +174,6 @@ def download_file(filename):
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     except Exception as e:
         return jsonify({"error": str(e)}), 404
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
