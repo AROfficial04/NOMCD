@@ -17,6 +17,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 client = MongoClient("mongodb+srv://mass:ayamass@nomc.r8hka.mongodb.net/")
 db = client['nomc']
 collection = db['processed_data']
+fs = gridfs.GridFS(db)  # Initialize GridFS
 
 # Helper function to check file extensions
 def allowed_file(filename):
@@ -27,25 +28,39 @@ def allowed_file(filename):
 def index():
     return render_template("index.html")
 
-# Route to handle file uploads and get columns
-@app.route("/get_columns", methods=["POST"])
-def get_columns():
+# Route to handle file uploads and store in GridFS
+@app.route("/upload", methods=["POST"])
+def upload_file():
     try:
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
 
-            # Read the Excel file and extract columns
-            df = pd.read_excel(filepath)
-            columns = df.columns.tolist()
+            # Save file to GridFS
+            file_id = fs.put(file, filename=filename)
 
-            return jsonify({"columns": columns})
+            return jsonify({"message": "File uploaded successfully", "file_id": str(file_id)}), 200
         else:
             return jsonify({"error": "Invalid file format"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# Route to retrieve a file from GridFS
+@app.route('/download/<file_id>', methods=['GET'])
+def download_file(file_id):
+    try:
+        # Fetch file from GridFS
+        grid_out = fs.get(file_id)
+        return send_file(
+            io.BytesIO(grid_out.read()),
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            as_attachment=True,
+            download_name=grid_out.filename
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 404
+
+
 
 # Route to process the uploaded data
 @app.route("/process_data", methods=["POST"])
