@@ -4,6 +4,7 @@ import os
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 import json
+import gridfs
 
 app = Flask(__name__, static_folder='assets')
 
