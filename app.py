@@ -14,7 +14,7 @@ ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # MongoDB connection
-client = MongoClient("mongodb+srv://mass:ayamass@nomc.r8hka.mongodb.net/")
+client = MongoClient("mongodb+srv://mass:ayamass@cluster0.r8hka.mongodb.net/")
 db = client['nomc']
 collection = db['processed_data']
 fs = gridfs.GridFS(db)  # Initialize GridFS
